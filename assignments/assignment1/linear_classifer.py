@@ -76,17 +76,7 @@ def softmax_with_cross_entropy(predictions, target_index):
       loss, single value - cross-entropy loss
       dprediction, np array same shape as predictions - gradient of predictions by loss value
     '''
-    '''
-    orig_predictions = predictions.copy()
-    probs = softmax(orig_predictions)
-    loss = cross_entropy_loss(probs,target_index)
-    #print(predictions.shape)
-    #print(predictions)
-    #orig_predictions_2 = predictions.copy()
-    dprediction = probs + loss
-    #print(dprediction.shape)
-    #print(dprediction)
-    '''
+    
     probs = softmax(predictions)
     loss_val = cross_entropy_loss(probs, target_index)
 
@@ -133,27 +123,29 @@ def softmax_with_cross_entropy(predictions, target_index):
 #     return loss, grad
     
 
-# def linear_softmax(X, W, target_index):
-#     '''
-#     Performs linear classification and returns loss and gradient over W
+def linear_softmax(X, W, target_index):
+    '''
+    Performs linear classification and returns loss and gradient over W
 
-#     Arguments:
-#       X, np array, shape (num_batch, num_features) - batch of images
-#       W, np array, shape (num_features, classes) - weights
-#       target_index, np array, shape (num_batch) - index of target classes
+    Arguments:
+      X, np array, shape (num_batch, num_features) - batch of images
+      W, np array, shape (num_features, classes) - weights
+      target_index, np array, shape (num_batch) - index of target classes
 
-#     Returns:
-#       loss, single value - cross-entropy loss
-#       gradient, np.array same shape as W - gradient of weight by loss
+    Returns:
+      loss, single value - cross-entropy loss
+      gradient, np.array same shape as W - gradient of weight by loss
 
-#     '''
-#     predictions = np.dot(X, W)
-
-#     # TODO implement prediction and gradient over W
-#     # Your final implementation shouldn't have any loops
-#     raise Exception("Not implemented!")
+    '''
+    predictions = np.dot(X, W)
+    loss, dpredictions = softmax_with_cross_entropy(predictions, target_index)
+    dW = np.dot(X.T,dpredictions)
+    return loss, dW
+    # TODO implement prediction and gradient over W
+    # Your final implementation shouldn't have any loops
+    raise Exception("Not implemented!")
     
-#     return loss, dW
+    
 
 
 # class LinearSoftmaxClassifier():
