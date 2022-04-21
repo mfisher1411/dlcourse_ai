@@ -103,24 +103,26 @@ def softmax_with_cross_entropy(predictions, target_index):
     
 
 
-# def l2_regularization(W, reg_strength):
-#     '''
-#     Computes L2 regularization loss on weights and its gradient
+def l2_regularization(W, reg_strength):
+    '''
+    Computes L2 regularization loss on weights and its gradient
 
-#     Arguments:
-#       W, np array - weights
-#       reg_strength - float value
+    Arguments:
+      W, np array - weights
+      reg_strength - float value
 
-#     Returns:
-#       loss, single value - l2 regularization loss
-#       gradient, np.array same shape as W - gradient of weight by l2 loss
-#     '''
+    Returns:
+      loss, single value - l2 regularization loss
+      gradient, np.array same shape as W - gradient of weight by l2 loss
+    '''
+    loss = reg_strength * np.sum(np.power(W,2))
+    grad = reg_strength * np.dot(W,2)
+    # TODO: implement l2 regularization and gradient
+    # Your final implementation shouldn't have any loops
+    return loss, grad
+    raise Exception("Not implemented!")
 
-#     # TODO: implement l2 regularization and gradient
-#     # Your final implementation shouldn't have any loops
-#     raise Exception("Not implemented!")
-
-#     return loss, grad
+    
     
 
 def linear_softmax(X, W, target_index):
