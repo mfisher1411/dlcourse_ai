@@ -48,8 +48,13 @@ def cross_entropy_loss(probs, target_index):
       loss: single value
       
     '''
-    probs = probs.T
-   
+    if probs.ndim > 1:
+        t_index_1d = target_index.reshape(-1)
+        flat_index_array = np.ravel_multi_index(
+            np.array([np.arange(t_index_1d.shape[0]),t_index_1d], dtype=np.int),
+            probs.shape)
+        loss_arr = -np.log(np.ravel(probs)[flat_index_array])
+        return np.mean(loss_arr)
     return -np.log(probs[target_index])
     # TODO implement cross-entropy
     # Your final implementation shouldn't have any loops
@@ -82,25 +87,25 @@ def softmax_with_cross_entropy(predictions, target_index):
     #print(dprediction.shape)
     #print(dprediction)
     '''
-    orig_predictions = predictions.copy()
-    #print('orig_predictions')
-    #print(orig_predictions)
-    probs = softmax(orig_predictions)
-    #print('probs')
-    #print(probs)
-    loss = cross_entropy_loss(probs, target_index)
-    #print('loss')
-    #print(loss)
-    probs = probs.T
-    
-    ground_trues = np.zeros(probs.shape, dtype=np.float32)
-   
-    ground_trues[target_index] = 1.0
-    #print('ground_trues add 1.0')
-    #print(ground_trues)
+    probs = softmax(predictions)
+    loss_val = cross_entropy_loss(probs, target_index)
+
+    ground_trues = np.zeros(predictions.shape, dtype=np.float32)
+    if predictions.ndim > 1:
+        t_index_1d = target_index.reshape(-1)
+        flat_index_array = np.ravel_multi_index(
+            np.array([np.arange(t_index_1d.shape[0]),t_index_1d], dtype=np.int),
+            ground_trues.shape)
+        np.ravel(ground_trues)[flat_index_array] = 1.0
+    else:
+        ground_trues[target_index] = 1.0
+
     dprediction = probs - ground_trues
-    
-    return loss, dprediction.T
+    if predictions.ndim > 1:
+        dprediction /= dprediction.shape[0]
+    loss = loss_val if predictions.ndim == 1 else np.mean(loss_val)
+
+    return loss, dprediction
     # TODO implement softmax with cross-entropy
     # Your final implementation shouldn't have any loops
     raise Exception("Not implemented!")
