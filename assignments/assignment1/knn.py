@@ -117,7 +117,14 @@ class KNN:
         for i in range(num_test):
             # TODO: Implement choosing best class based on k
             # nearest training samples
-            pass
+            temp = dists[i].argsort() #массив индексов i-ой строки массива dists
+            #It returns an array of indices of the same shape as a that index data along the given axis in sorted order.
+            #Sorting algorithm. The default is ‘quicksort’.
+            ranks = np.empty_like(temp) #Return a new uninitialized array with the same shape and type as a given array.
+            ranks[temp] = np.arange(len(dists[i]))
+            variants = self.train_y[ranks < self.k]
+            assert len(variants) == self.k
+            pred[i] = (np.sum(variants, dtype=np.float32) / self.k) >= 0.5
         return pred
 
     def predict_labels_multiclass(self, dists):
